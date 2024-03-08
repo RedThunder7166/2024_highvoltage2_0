@@ -1,8 +1,10 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -10,6 +12,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -27,6 +30,10 @@ public class SwerveModule {
     private TalonSRX mAngleMotor;
     private TalonFX mDriveMotor;
     private CANcoder angleEncoder;
+
+    private PIDController angleController = new PIDController(
+        Constants.Swerve.angleKP,
+        moduleNumber, moduleNumber);
 
     private final SimpleMotorFeedforward driveFeedForward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
@@ -50,8 +57,9 @@ public class SwerveModule {
         mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleSRXConfig);
         mAngleMotor.setInverted(Constants.Swerve.angleMotorInvert == InvertedValue.Clockwise_Positive);
         mAngleMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
-        mAngleMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog);
-        mAngleMotor.configRemoteFeedbackFilter(angleEncoder.getDeviceID(), RemoteSensorSource.CANCoder, 0);
+        mAngleMotor.configRemoteFeedbackFilter(moduleConstants.cancoderID, RemoteSensorSource.CANCoder, 0);
+        mAngleMotor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+        // mAngleMotor.configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0);
         resetToAbsolute();
 
         /* Drive Motor Config */
@@ -62,8 +70,7 @@ public class SwerveModule {
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
-        System.out.println(desiredState.angle.getRotations());
-        mAngleMotor.set(TalonSRXControlMode.Position, desiredState.angle.getRotations());
+         mAngleMotor.set(TalonSRXControlMode.Position, desiredState.angle.getRotations());
         // mAngleMotor.setControl(anglePosition.withPosition(desiredState.angle.getRotations()));
         setSpeed(desiredState, isOpenLoop);
     }
