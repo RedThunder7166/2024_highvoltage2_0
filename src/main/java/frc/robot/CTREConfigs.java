@@ -1,18 +1,31 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 public final class CTREConfigs {
-    public TalonFXConfiguration swerveAngleFXConfig = new TalonFXConfiguration();
-    public TalonSRXConfiguration swerveAngleSRXConfig = new TalonSRXConfiguration();
+    // public TalonFXConfiguration swerveAngleFXConfig = new TalonFXConfiguration();
+    public TalonSRXConfiguration swerveAngleSRXConfig0 = new TalonSRXConfiguration();
+    public TalonSRXConfiguration swerveAngleSRXConfig1 = new TalonSRXConfiguration();
+    public TalonSRXConfiguration swerveAngleSRXConfig2 = new TalonSRXConfiguration();
+    public TalonSRXConfiguration swerveAngleSRXConfig3 = new TalonSRXConfiguration();
+    public TalonSRXConfiguration[] swerveAngleSRXConfigs = new TalonSRXConfiguration[] {
+        swerveAngleSRXConfig0,
+        swerveAngleSRXConfig1,
+        swerveAngleSRXConfig2,
+        swerveAngleSRXConfig3,
+    };
+
     public TalonFXConfiguration swerveDriveFXConfig = new TalonFXConfiguration();
-    public CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
+    // public CANCoderConfiguration swerveCANcoderConfig = new CANCoderConfiguration();
 
     public CTREConfigs(){
         /** Swerve CANCoder Configuration */
-        swerveCANcoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.cancoderInvert;
+        // swerveCANcoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.cancoderInvert;
+        // swerveCANcoderConfig.sensorDirection = false;
 
         // /** Swerve Angle Motor Configurations */
         // /* Motor Inverts and Neutral Mode */
@@ -24,22 +37,24 @@ public final class CTREConfigs {
         // swerveAngleFXConfig.ClosedLoopGeneral.ContinuousWrap = true;
         
         /* Current Limiting */
-        swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.angleEnableCurrentLimit;
-        swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleCurrentLimit;
-        swerveAngleFXConfig.CurrentLimits.SupplyCurrentThreshold = Constants.Swerve.angleCurrentThreshold;
-        swerveAngleFXConfig.CurrentLimits.SupplyTimeThreshold = Constants.Swerve.angleCurrentThresholdTime;
+        // swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimitEnable = Constants.Swerve.angleEnableCurrentLimit;
+        // swerveAngleFXConfig.CurrentLimits.SupplyCurrentLimit = Constants.Swerve.angleCurrentLimit;
+        // swerveAngleFXConfig.CurrentLimits.SupplyCurrentThreshold = Constants.Swerve.angleCurrentThreshold;
+        // swerveAngleFXConfig.CurrentLimits.SupplyTimeThreshold = Constants.Swerve.angleCurrentThresholdTime;
 
-        swerveAngleSRXConfig.peakCurrentDuration = Constants.Swerve.angleCurrentThresholdTime;
-        swerveAngleSRXConfig.peakCurrentLimit = Constants.Swerve.angleCurrentLimit;
+        for (TalonSRXConfiguration config : swerveAngleSRXConfigs) {
+            config.peakCurrentDuration = Constants.Swerve.angleCurrentThresholdTime;
+            config.peakCurrentLimit = Constants.Swerve.angleCurrentLimit;
 
-        /* PID Config */
-        // swerveAngleFXConfig.Slot0.kP = Constants.Swerve.angleKP;
-        // swerveAngleFXConfig.Slot0.kI = Constants.Swerve.angleKI;
-        // swerveAngleFXConfig.Slot0.kD = Constants.Swerve.angleKD;
+            config.slot0.kP = Constants.Swerve.angleKP;
+            config.slot0.kI = Constants.Swerve.angleKI;
+            config.slot0.kD = Constants.Swerve.angleKD;
 
-        swerveAngleSRXConfig.slot0.kP = Constants.Swerve.angleKP;
-        swerveAngleSRXConfig.slot0.kI = Constants.Swerve.angleKI;
-        swerveAngleSRXConfig.slot0.kD = Constants.Swerve.angleKD;
+            config.primaryPID.selectedFeedbackSensor = TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute.toFeedbackDevice();
+
+            config.feedbackNotContinuous = true;
+        }
+
 
         /** Swerve Drive Motor Configuration */
         /* Motor Inverts and Neutral Mode */

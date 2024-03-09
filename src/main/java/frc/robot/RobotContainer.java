@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -26,9 +25,11 @@ public class RobotContainer {
     /* Subsystems */
     private final SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
     // private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
-    // private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_visionSubsystem);
     // private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-
+    // private final AimSubsystem m_aimSubsystem = new AimSubsystem(m_visionSubsystem);
+    // private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_visionSubsystem);
+    // private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+    // private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(m_elevatorSubsystem, m_intakeSubsystem, m_shooterSubsystem);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -66,7 +67,7 @@ public class RobotContainer {
         operator.povLeft().onTrue(OurRobotState.setShootModeToClimbTrapCommand);
         operator.povRight().onTrue(OurRobotState.setShootModeToClimbTrapCommand);
 
-        operator.x().onTrue(OurRobotState.initiateCurrentShootModeCommand);
+        operator.x().onTrue(OurRobotState.initiateSequenceCommand);
     }
 
     /**

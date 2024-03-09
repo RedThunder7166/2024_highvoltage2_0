@@ -15,8 +15,18 @@ public class VisionSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public double getAutoAimPosition() {
-    // TODO: implement me
+  public double getAutoTargetPosition() {
+    // TODO: implement auto target position
     return 0;
+  }
+  public double getAutoTargetSpeed() {
+    // TODO: implement auto target speed
+    return 0;
+  }
+  public boolean getIsSpeakerAutoTargetInRange() {
+    // TODO: implement auto target
+    // this should just be if front camera sees AllianceColor.SUBWOOFER_CENTER
+    // and maybe some additional clarity checks
+    return false;
   }
 }

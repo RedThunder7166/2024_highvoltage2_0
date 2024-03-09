@@ -10,7 +10,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.lib.util.COTSTalonFXSwerveConstants;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
@@ -26,7 +27,7 @@ public final class Constants {
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
-         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
+        public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
             new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
             new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
@@ -34,10 +35,12 @@ public final class Constants {
 
         /* Module Gear Ratios */
         public static final double driveGearRatio = (22 / 14) * 3;
-        public static final double angleGearRatio = (41.25 / 1);
+        // public static final double angleGearRatio = (41.25 / 1);
+        public static final double angleGearRatio = (1);
 
         /* Motor Inverts */
-        public static final InvertedValue angleMotorInvert = InvertedValue.CounterClockwise_Positive;
+        // public static final InvertedValue angleMotorInvert = InvertedValue.Clockwise_Positive;
+        public static final boolean angleMotorInvert = true;
         public static final InvertedValue driveMotorInvert = InvertedValue.CounterClockwise_Positive;
 
         /* Angle Encoder Invert */
@@ -62,7 +65,7 @@ public final class Constants {
         public static final double closedLoopRamp = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = 10;
+        public static final double angleKP = 0.005;
         public static final double angleKI = 0;
         public static final double angleKD = 0;
 
@@ -146,12 +149,52 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
-    public static final class LED {
-        // TODO: get real blinkin id
-        public static final int BLINKIN_ID = -1;
+    public static final class AllianceColor {
+        public static final Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+        public static final boolean is_red_alliance = alliance == Alliance.Red;
+
+        public static final int SOURCE_RIGHT = is_red_alliance ? 9 : 1;
+        public static final int SOURCE_LEFT = is_red_alliance ? 10 : 2;
+
+        public static final int SUBWOOFER_SHIFTED = is_red_alliance ? 3 : 8;
+        public static final int SUBWOOFER_CENTER = is_red_alliance ? 4 : 7;
+
+        public static final int AMP = is_red_alliance ? 5 : 6;
+
+        // official names that I cannot wrap my head around
+        /* from https://www.youtube.com/watch?v=tElgzVLql08 (2024 Field Tour Video: Stage)
+            .....................................................
+            ...........................@.........................
+            ...........................@.........................
+            ...........................@.........................
+            .........Stage.............@..........Stage..........
+            .........Right.............@..........Left...........
+            .........11/15.............@..........12/16..........
+            ..........................@@@........................
+            ........................@@@.@@@......................
+            ......................@@@......@@@...................
+            ....................@@@...........@@@................
+            .................@@@.....Stage......@@@..............
+            ...............@@@.......Center.......@@@............
+            .............@@@.........13/14..........@@@..........
+            .....................................................
+        */
+        public static final int STAGE_RIGHT = is_red_alliance ? 11 : 15;
+        public static final int STAGE_LEFT = is_red_alliance ? 12 : 16; 
+        public static final int STAGE_CENTER = is_red_alliance ? 13 : 14;
     }
 
+
     public static final class Aim {
+        public static final int ANGLE_MOTOR_ID = 14;
+        // TODO: find angle cancoder id
+        public static final int ANGLE_CANCODER_ID = -1 + 3;
+
+        public static final double MINIMUM_PID_ERROR = 0.5;
+
+        // TODO: get actual angle motor gear ratio
+        public static final double ANGLE_MOTOR_GEAR_RATIO = 1 / 1;
+
         // TODO: find aim collision avoidance position that will be used amp and trap position
         public static final double COLLISION_AVOIDANCE_POSITION = -1;
     }
@@ -169,11 +212,32 @@ public final class Constants {
 
     public static final class Intake {
         public static final int INTAKE_MOTOR_ID = 9;
+        public static final int INDEXING_MOTOR_ID = 13;
+
+        public static final int ENTRANCE_SENSOR_ID = 1;
+        public static final int EXIT_SENSOR_ID = 2;
 
         // TODO: verify intake current limits
         public static final double INTAKE_MOTOR_CURRENT_LIMIT = 30;
 
         // TODO: find real intake percent output
         public static final double INTAKE_PERCENT_OUTPUT = 0.2;
+        public static final double INDEXING_PERCENT_OUTPUT = 0.2;
+    }
+
+    public static final class LED {
+        // TODO: get real blinkin id
+        public static final int BLINKIN_ID = -1 + 4;
+    }
+
+    public static final class Shooter {
+        public static final int UPPER_SHOOTER_MOTOR_ID = 15;
+        public static final int LOWER_SHOOTER_MOTOR_ID = 16;
+
+        public static final int EXIT_SENSOR_ID = 6;
+
+        public static final boolean LOWER_MOTOR_OPPOSES_UPPER = true;
+
+        public static final double PERCENT_OUTPUT = 0.2;
     }
 }

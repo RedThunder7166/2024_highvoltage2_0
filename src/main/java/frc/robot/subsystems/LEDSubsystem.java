@@ -15,17 +15,35 @@ public class LEDSubsystem extends SubsystemBase {
 
   private final ElevatorSubsystem m_elevator;
   private final IntakeSubsystem m_intake;
-  public LEDSubsystem(ElevatorSubsystem elevator, IntakeSubsystem intake) {
+  private final ShooterSubsystem m_shooter;
+  public LEDSubsystem(ElevatorSubsystem elevator, IntakeSubsystem intake, ShooterSubsystem shooter) {
     m_elevator = elevator;
     m_intake = intake;
+    m_shooter = shooter;
+  }
+
+  // checks not only if elevator is at the top, but also if we are in a mode that moves the elevator
+  private boolean isElevatorAtTop() {
+    switch (OurRobotState.getShootMode()) {
+      case Amp:
+      case Climb_Trap:
+        return m_elevator.getIsAtTop();
+    
+      default:
+        return false;
+    }
   }
 
   @Override
   public void periodic() {
     OurRobotState.LEDValue ledValue = LEDValue.Idle;
-    if (m_elevator.getIsAtTop()) {
+    if (m_intake.getEntranceSensorState()) {
+      ledValue = LEDValue.Color2Flash;
+    } else if (m_intake.getExitSensorState() || isElevatorAtTop() || m_shooter.getIsFiring()) {
       ledValue = LEDValue.SolidGreen;
-    } else if (m_intake.getIsIntakingForward()) {
+    } else if (m_shooter.getIsTargetInRange()) {
+      ledValue = LEDValue.Color2Flash;
+    } else if (m_intake.getIsIntakingForward() || m_shooter.getIsTargetingAndEngaged()) {
       ledValue = LEDValue.Color1Flash;
     }
 
