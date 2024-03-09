@@ -199,6 +199,15 @@ public final class Constants {
         public static final double COLLISION_AVOIDANCE_POSITION = -1;
     }
 
+    public static final class AmpTrap {
+        public static final int ROLLER_MOTOR_ID = 10;
+        public static final int TOP_SENSOR_ID = 3;
+
+        // TODO: find amp / trap percent output
+        public static final double PERCENT_OUTPUT = 0.2;
+
+    }
+
     public static final class Elevator {
         public static final int LEFT_MOTOR_ID = 11;
         public static final int RIGHT_MOTOR_ID = 12;

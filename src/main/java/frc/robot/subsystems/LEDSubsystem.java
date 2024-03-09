@@ -16,10 +16,12 @@ public class LEDSubsystem extends SubsystemBase {
   private final ElevatorSubsystem m_elevator;
   private final IntakeSubsystem m_intake;
   private final ShooterSubsystem m_shooter;
-  public LEDSubsystem(ElevatorSubsystem elevator, IntakeSubsystem intake, ShooterSubsystem shooter) {
+  private final AmpTrapSubsystem m_amptrap;
+  public LEDSubsystem(ElevatorSubsystem elevator, IntakeSubsystem intake, ShooterSubsystem shooter, AmpTrapSubsystem amptrap) {
     m_elevator = elevator;
     m_intake = intake;
     m_shooter = shooter;
+    m_amptrap = amptrap;
   }
 
   // checks not only if elevator is at the top, but also if we are in a mode that moves the elevator
@@ -43,7 +45,7 @@ public class LEDSubsystem extends SubsystemBase {
       ledValue = LEDValue.SolidGreen;
     } else if (m_shooter.getIsTargetInRange()) {
       ledValue = LEDValue.Color2Flash;
-    } else if (m_intake.getIsIntakingForward() || m_shooter.getIsTargetingAndEngaged()) {
+    } else if (m_intake.getIsIntakingForward() || m_shooter.getIsTargetingAndEngaged() || m_amptrap.getIsInMotion()) {
       ledValue = LEDValue.Color1Flash;
     }
 
