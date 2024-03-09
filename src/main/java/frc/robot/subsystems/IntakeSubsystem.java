@@ -86,11 +86,13 @@ public class IntakeSubsystem extends SubsystemBase {
         case Firing:
           m_intakeMotor.setControl(intakeForwardRequest); // note: this is duplicate logic (check the else branch below), so make sure to sync
           isIntakingForward = true;
+
+          indexingTowardShooter();
           break;
 
         default:
           m_intakeMotor.disable();
-          m_indexingState = IndexingState.Stop;
+          stopIndexing();
           break;
       }
     } else {
